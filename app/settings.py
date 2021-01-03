@@ -1,0 +1,9 @@
+import aiohttp
+
+SESSION = aiohttp.ClientSession()
+
+TARGETS_FILE = "targets.yml"
+REQUEST_RETRIES = 2
+REQUEST_RETRIES_WAIT = 2
+REQUEST_TIMEOUT = 5
+REQUEST_HTTP_CODE = 200

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>python-http-monitoring</title>
+    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
+</head>
+
+<body>
+    <h1 id=status-header>Status Dashboard</h1>
+    {% if targets.down %}
+    <section id="down_targets">
+        <h3 id="down_targets-header">↓↓↓ {{ targets.down|length }} error(s) ↓↓↓</h3>
+        <hr id="down_targets-separator">
+        <table id="down_targets-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>HTTP Status/Expected</th>
+                    <th>Error</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for down_target in targets.down %}
+                <tr>
+                    <td>
+                        <a href={{ down_target.url}} target="_blank">
+                            {{ down_target.url }}
+                        </a>
+                    </td>
+                    <td>
+                        {{ down_target.response_http_code }}
+                        /
+                        {{ down_target.expected_http_code }}
+                    </td>
+                    <td>
+                        {{ down_target.error }}
+                    </td>
+                </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+        <p id="retry-message">
+            Retried each target {{ requests_info.retries }} times.
+            Waited {{ requests_info.retries_wait }}s in between.
+            Timed out after: {{ requests_info.timeout }}s.
+        </p>
+
+    </section>
+    {% endif %}
+    {% if targets.up %}
+    <section id="up_targets">
+        {% if not targets.down %}
+        <h3 id="up_targets-header">↑↑↑ All services up ↑↑↑</h3>
+        {% endif %}
+        <ul id=up_targets-list>
+            {% for up_target in targets.up %}
+            <li class=up_targets-list-item>
+                {{ up_target.display }}
+                <font color=DimGray>
+                    ( {{ up_target.elapsed }}s )
+                </font>
+                <span class="up_targets-list-item-tooltip">
+                    URL: <a href={{ up_target.url}} target="_blank">{{ up_target.url}}</a>
+                    <br>
+                    Status: {{ up_target.response_http_code}}
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+    <section id="info">
+        <p>Last check: {{ now }}</p>
+        <p>Duration: {{ elapsed }}ms</p>
+        <p> By <a href="https://github.com/itzkvn">itzkvn</a> @ <a href="https://github.com/itzkvn/python-http-monitoring">python-http-monitoring</a></p>
+    </section>
+</body>
+
+</html>
