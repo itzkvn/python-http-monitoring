@@ -1,5 +1,6 @@
 import time
 import asyncio
+from asyncio import TimeoutError
 
 import yaml
 from typing import NamedTuple, Optional
@@ -15,6 +16,7 @@ from settings import (
     REQUEST_RETRIES,
     REQUEST_RETRIES_WAIT,
     REQUEST_TIMEOUT,
+    REQUEST_DEFAULT_HTTP_CODE,
 )
 
 
@@ -25,23 +27,28 @@ class TargetStatus(BaseModel):
     expected_http_code: int
     elapsed: float
     error: Optional[str]
-    status: bool
 
 
 def get_targets():
-    # TODO: Target "schema" validation
+    # TODO: Proper "schema" validation
     with open(TARGETS_FILE) as file:
         targets = yaml.safe_load(file.read())
+    if not all(
+        [target.get("display") and target.get("url") for target in targets["targets"]]
+    ):
+        raise AssertionError(
+            f"Couldn't find 'display' or 'url' for all targets in {TARGETS_FILE}"
+        )
     return targets
 
 
 async def get_target_status(target: dict):
     display = target["display"]
     url = target["url"]
-    expected_http_code = target["expected_http_code"]
+    expected_http_code = target.get("expected_http_code") or REQUEST_DEFAULT_HTTP_CODE
 
-    error = None
-    for _ in range(REQUEST_RETRIES):
+    for RETRY_NUMBER in range(REQUEST_RETRIES):
+        error = None
         start = time.monotonic()
         try:
             async with SESSION.get(
@@ -50,18 +57,27 @@ async def get_target_status(target: dict):
                 response_http_code = response.status
         except ClientConnectorError as ex:
             response_http_code = -1
-            error = ex
+            error = str(ex) or str(type(ex))
+        except TimeoutError as ex:
+            response_http_code = -1
+            error = f"Request timeout after {REQUEST_TIMEOUT}s"
+
         elapsed = round(time.monotonic() - start, 2)
 
-        status = response_http_code == expected_http_code
-
-        if not status and response_http_code != -1 and not error:
-            error = "Status code does not match expected code"
-
-        if status:
+        if not error:
             break
 
+        # Wait potential flapping time.
         await asyncio.sleep(REQUEST_RETRIES_WAIT)
+
+
+        # If we already know the error no need for http comparison.
+        if error:
+            continue
+
+        if response_http_code != expected_http_code:
+            error = "Status code does not match expected code"
+            continue
 
     return TargetStatus(
         display=display,
@@ -69,7 +85,6 @@ async def get_target_status(target: dict):
         response_http_code=response_http_code,
         expected_http_code=expected_http_code,
         elapsed=elapsed,
-        status=status,
         error=error,
     )
 

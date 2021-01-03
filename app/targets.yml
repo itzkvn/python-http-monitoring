@@ -1,13 +1,14 @@
 targets:
-    - display: Coronavirus - Worldometer
-      url: https://www.worldometers.info/coronavirus/
-      expected_http_code: 200
-    - display: Population - Worldometer
-      url: https://www.worldometers.info/population/
-      expected_http_code: 200
-    - display: Google
-      url: https://www.google.com
-      expected_http_code: 200
-    - display: HTTP Easter Egg
-      url: https://httpstatuses.com/418
-      expected_http_code: 301
+  - display: Coronavirus - Worldometer
+    url: https://www.worldometers.info/coronavirus/
+    expected_http_code: 200
+  - display: Population - Worldometer
+    url: https://www.worldometers.info/population/
+    expected_http_code: 200
+  - display: Google
+    url: https://www.google.com
+    expected_http_code: 200
+  - display: HTTP Easter Egg
+    url: https://httpstatuses.com/418
+  - display: reddit
+    url: https://reddit.com/
