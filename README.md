@@ -1,5 +1,7 @@
 # python-http-monitoring
 
+![](./docs/dashboard_example.png)
+
 HTTP(s) "monitoring" powered by FastAPI+Jinja2+aiohttp.
 
 Inspired by [bash-http-monitoring](https://github.com/RaymiiOrg/bash-http-monitoring).
