@@ -34,14 +34,24 @@ templates = Jinja2Templates(directory="templates")
 async def startup_event():
     await SESSION.close()
 
+
 @app.get("/target/status", response_class=HTMLResponse)
 async def get_targets_status(request: Request):
     start = time.monotonic()
-    targets_status = await targets.get_targets_status()
+    try:
+        targets_status = await targets.get_targets_status()
+    except Exception as ex:
+        return templates.TemplateResponse(
+            "500_template.html",
+            {
+                "request": request,
+                "error": str(ex) or str(type(ex)),
+            },
+        )
     elapsed = round(time.monotonic() - start, 2) * 1000
 
     return templates.TemplateResponse(
-        "target_status.html",
+        "targets_template.html",
         {
             "request": request,
             "targets": targets_status,

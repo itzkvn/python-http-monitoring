@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
     <title>python-http-monitoring</title>
+    <link href="{{ url_for('static', path='/targets_template.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
 </head>
 
@@ -42,8 +44,8 @@
             </tbody>
         </table>
         <p id="retry-message">
-            Retried each target {{ requests_info.retries }} times.
-            Waited {{ requests_info.retries_wait }}s in between.
+            Tried to reach each target {{ requests_info.retries }} times.
+            Waited {{ requests_info.retries_wait }}s in between requests.
             Timed out after: {{ requests_info.timeout }}s.
         </p>
 
@@ -74,7 +76,8 @@
     <section id="info">
         <p>Last check: {{ now }}</p>
         <p>Duration: {{ elapsed }}ms</p>
-        <p> By <a href="https://github.com/itzkvn">itzkvn</a> @ <a href="https://github.com/itzkvn/python-http-monitoring">python-http-monitoring</a></p>
+        <p> By <a href="https://github.com/itzkvn">itzkvn</a> @ <a
+                href="https://github.com/itzkvn/python-http-monitoring">python-http-monitoring</a></p>
     </section>
 </body>
 

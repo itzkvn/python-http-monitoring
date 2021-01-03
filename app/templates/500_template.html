@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>python-http-monitoring</title>
+    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', path='/500_template.css') }}" rel="stylesheet">
+</head>
+
+<body>
+    <section class="centered">
+        <h1>500 Server Error</h1>
+        <div class="container">
+            <p class="message">{{ error }}</p>
+        </div>
+    </section>
+</body>
+
+</html>

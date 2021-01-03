@@ -1,0 +1,33 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+* {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.centered {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.centered h1, .container p {
+  color: rgb(250, 250, 250);
+}
+
+h1 {
+  margin-bottom: 50px;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: bold;
+  font-size: 50px;
+}
+
+.message {
+  display: inline-block;
+  overflow: hidden;
+  font-family: 'Open Sans', serif;
+  font-size: 30px;
+}
