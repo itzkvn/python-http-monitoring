@@ -22,7 +22,7 @@ Support other HTTP methods
 ## Installation
 
 Minimum requirements to run locally:
-- < Python 3.7
+- \>Python 3.7
 - [pipenv](https://pypi.org/project/pipenv/)
 
 Otherwise, if you want to run it in a container:
