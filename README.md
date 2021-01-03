@@ -45,13 +45,13 @@ Docker:
 If you want to try it out:
 
 ```bash
-docker run -it --rm -p 18080:80 itzkvn/python-http-monitoring
+docker run -it --rm -p 18080:80 kollowz/python-http-monitoring
 ```
 
 If you want to mount a configuration file:
 
 ```bash
-docker run -it --rm -p 18080:80 -v "/path/to/targets.yml:/app/targets.yml" itzkvn/python-http-monitoring
+docker run -it --rm -p 18080:80 -v "/path/to/targets.yml:/app/targets.yml" kollowz/python-http-monitoring
 ```
 
 Either way you access the website at 127.0.0.1:18080/target/status.
