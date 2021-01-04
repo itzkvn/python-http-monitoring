@@ -12,7 +12,6 @@ from aiohttp.client_exceptions import ClientConnectorError
 
 from settings import (
     TARGETS_FILE,
-    SESSION,
     REQUEST_RETRIES,
     REQUEST_RETRIES_WAIT,
     REQUEST_TIMEOUT,
@@ -42,7 +41,7 @@ def get_targets():
     return targets
 
 
-async def get_target_status(target: dict):
+async def get_target_status(target: dict, session: ClientSession):
     display = target["display"]
     url = target["url"]
     expected_http_code = target.get("expected_http_code") or REQUEST_DEFAULT_HTTP_CODE
@@ -51,7 +50,7 @@ async def get_target_status(target: dict):
         error = None
         start = time.monotonic()
         try:
-            async with SESSION.get(
+            async with session.get(
                 url=url, allow_redirects=False, timeout=REQUEST_TIMEOUT
             ) as response:
                 response_http_code = response.status
@@ -89,11 +88,11 @@ async def get_target_status(target: dict):
     )
 
 
-async def get_targets_status():
+async def get_targets_status(session: ClientSession):
     targets = get_targets()
     targets = targets["targets"]
     targets_status = await asyncio.gather(
-        *(get_target_status(target=target) for target in targets)
+        *(get_target_status(target=target, session=session) for target in targets)
     )
 
     return {
