@@ -69,7 +69,6 @@ Each target consists of:
 - expected_http_code: Status code that will be validated against response status code (this is, mostly, what makes a check go either green or red).
 
 settings.py: "backend" configuration
-- SESSION: Encapsulates a connection pool.
 - TARGETS_FILE: Configuration file for targets.
 - REQUEST_RETRIES: # of retries per url (only retries if it fails).
 - REQUEST_RETRIES_WAIT: # of seconds between retries.
@@ -78,8 +77,12 @@ settings.py: "backend" configuration
 
 ## Screenshots
 
-...
+__Error view__
+![](./docs/dashboard_with_errors.png)
+
+__Big target list__
+![](./docs/dashboard_tons_of_targets.png)
 
 ## ¿Why did I make this?
 
-Saw [bash-http-monitoring](https://github.com/RaymiiOrg/bash-http-monitoring) on [r/selfhosted](https://www.reddit.com/r/selfhosted/comments/klao26/bash_http_monitoring_dashboard/) and a weekend free to hack on something. Thought this was a fun enough challenge so here it is :)
+Saw [bash-http-monitoring](https://github.com/RaymiiOrg/bash-http-monitoring) on [r/selfhosted](https://www.reddit.com/r/selfhosted/comments/klao26/bash_http_monitoring_dashboard/) and had a weekend free to hack on something. Thought this was a fun enough challenge so here it is :)
