@@ -7,12 +7,12 @@ verify_ssl = true
 black = "*"
 
 [packages]
-aiohttp = "*"
 pyyaml = "*"
 fastapi = "*"
 jinja2 = "*"
 aiofiles = "*"
 uvicorn = {extras = ["standard"],version = "*"}
+httpx = "*"
 
 [requires]
 python_version = "3.7"

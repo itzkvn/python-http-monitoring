@@ -10,5 +10,12 @@ targets:
     expected_http_code: 200
   - display: HTTP Easter Egg
     url: https://httpstatuses.com/418
-  - display: reddit
+  - display: Reddit Bad
     url: https://reddit.com/
+    expected_http_code: 200
+  - display: Behance Found
+    url: https://behance.net/
+    expected_http_code: 302
+  - display: Behance Content
+    url: https://www.behance.net/
+    expected_http_code: 200

@@ -1,14 +1,13 @@
 import time
 import asyncio
-from asyncio import TimeoutError
 
 import yaml
 from typing import NamedTuple, Optional
 
 from pydantic import BaseModel
 
-from aiohttp import ClientSession
-from aiohttp.client_exceptions import ClientConnectorError
+import httpx
+from httpx import ConnectTimeout, ConnectError
 
 from settings import (
     TARGETS_FILE,
@@ -41,7 +40,7 @@ def get_targets():
     return targets
 
 
-async def get_target_status(target: dict, session: ClientSession):
+async def get_target_status(target: dict):
     display = target["display"]
     url = target["url"]
     expected_http_code = target.get("expected_http_code") or REQUEST_DEFAULT_HTTP_CODE
@@ -50,33 +49,26 @@ async def get_target_status(target: dict, session: ClientSession):
         error = None
         start = time.monotonic()
         try:
-            async with session.get(
-                url=url, allow_redirects=False, timeout=REQUEST_TIMEOUT
-            ) as response:
-                response_http_code = response.status
-        except ClientConnectorError as ex:
+            async with httpx.AsyncClient() as client:
+                response = await client.get(
+                    url, allow_redirects=False, timeout=REQUEST_TIMEOUT
+                )
+                response_http_code = response.status_code
+        except ConnectError as ex:
             response_http_code = -1
             error = str(ex) or str(type(ex))
-        except TimeoutError as ex:
+        except ConnectTimeout as ex:
             response_http_code = -1
             error = f"Request timeout after {REQUEST_TIMEOUT}s"
-
         elapsed = round(time.monotonic() - start, 2)
 
         if not error:
             break
 
-        # Wait potential flapping time.
         await asyncio.sleep(REQUEST_RETRIES_WAIT)
 
-
-        # If we already know the error no need for http comparison.
-        if error:
-            continue
-
-        if response_http_code != expected_http_code:
-            error = "Status code does not match expected code"
-            continue
+    if not error and response_http_code != expected_http_code:
+        error = "Status code does not match expected code"
 
     return TargetStatus(
         display=display,
@@ -88,11 +80,11 @@ async def get_target_status(target: dict, session: ClientSession):
     )
 
 
-async def get_targets_status(session: ClientSession):
+async def get_targets_status():
     targets = get_targets()
     targets = targets["targets"]
     targets_status = await asyncio.gather(
-        *(get_target_status(target=target, session=session) for target in targets)
+        *(get_target_status(target=target) for target in targets)
     )
 
     return {

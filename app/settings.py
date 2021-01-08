@@ -1,5 +1,3 @@
-import aiohttp
-
 TARGETS_FILE = "targets.yml"
 REQUEST_RETRIES = 1
 REQUEST_RETRIES_WAIT = 1
